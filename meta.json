@@ -1,0 +1,72 @@
+[
+    {
+        "name": "ls",
+        "description": "Display directory contents and list files and folders",
+        "syntax": "ls [options] [directory]",
+        "keywords": ["list", "display", "show", "directory", "files", "folders", "contents"],
+        "examples": ["ls -la", "ls Documents/"]
+    },
+    {
+        "name": "cat",
+        "description": "View and display the contents of text files",
+        "syntax": "cat [options] [file]",
+        "keywords": ["view", "read", "display", "contents", "text", "file", "show"],
+        "examples": ["cat file.txt", "cat -n script.py"]
+    },
+    {
+        "name": "mkdir",
+        "description": "Create new directories and folder structures",
+        "syntax": "mkdir [options] directory",
+        "keywords": ["create", "new", "directory", "folder", "make"],
+        "examples": ["mkdir new_folder", "mkdir -p path/to/new/dir"]
+    },
+    {
+        "name": "rm",
+        "description": "Delete and remove files or directories permanently",
+        "syntax": "rm [options] file",
+        "keywords": ["remove", "delete", "erase", "eliminate"],
+        "examples": ["rm file.txt", "rm -rf old_directory"]
+    },
+    {
+        "name": "chmod",
+        "description": "Modify and change file or directory permissions and access rights",
+        "syntax": "chmod [options] mode file",
+        "keywords": ["permissions", "access", "rights", "modify", "change"],
+        "examples": ["chmod 755 script.sh", "chmod -R u+x directory"]
+    },
+    {
+        "name": "grep",
+        "description": "Search and find text patterns within files and content",
+        "syntax": "grep [options] pattern [file...]",
+        "keywords": ["search", "find", "text", "pattern", "content"],
+        "examples": ["grep 'pattern' file.txt", "grep -r 'text' ."]
+    },
+    {
+        "name": "df",
+        "description": "Check disk space usage and available storage",
+        "syntax": "df [options] [filesystem]",
+        "keywords": ["disk", "space", "storage", "usage", "available"],
+        "examples": ["df -h", "df -T /dev/sda1"]
+    },
+    {
+        "name": "ps",
+        "description": "List running processes and system tasks",
+        "syntax": "ps [options]",
+        "keywords": ["process", "running", "tasks", "programs", "active"],
+        "examples": ["ps aux", "ps -ef | grep python"]
+    },
+    {
+        "name": "tar",
+        "description": "Compress, archive, and package files and directories",
+        "syntax": "tar [options] [archive] [files...]",
+        "keywords": ["compress", "archive", "package", "zip", "bundle"],
+        "examples": ["tar -czf archive.tar.gz files/", "tar -xzf archive.tar.gz"]
+    },
+    {
+        "name": "cp",
+        "description": "Copy and duplicate files and directories to new locations",
+        "syntax": "cp [options] source destination",
+        "keywords": ["copy", "duplicate", "replicate", "transfer"],
+        "examples": ["cp file.txt backup/", "cp -r source_dir/ dest_dir/"]
+    }
+]
