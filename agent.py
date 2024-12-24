@@ -14,6 +14,7 @@ import contextlib
 import db as _db
 import numpy as np
 from tqdm import tqdm
+import vec_db as _vec_db
 
 from rich.panel import Panel
 from rich.table import Table
@@ -47,7 +48,7 @@ def suppress_outputs():
 # model infos
 MODEL_NAME = "answerdotai/ModernBERT-large"
 # MODEL_NAME = "answerdotai/ModernBERT-base"
-# MODEL_NAME = "all-mpnet-base-v2"
+MODEL_NAME = "all-mpnet-base-v2"
 SUIK_LOGO = "🦦"
 
 
@@ -65,7 +66,7 @@ def load_model(model_name):
 
 
 def load_meta(meta_file):
-    # return _db.fetch_all_documents()
+    return _db.fetch_all_documents()
     with open(meta_file, "r") as f:
         return json.loads(f.read())
 
@@ -130,11 +131,16 @@ def format_response(match: dict, score: float) -> Panel:
     )
 
 
+def vector_db_ask(query, model):
+    query_emb = embed(query, model)
+    return _vec_db.search(query_emb)
+
+
 def main():
     console.print(Panel.fit(f"{SUIK_LOGO} Suika Loading ...", title="Initializing"))
     model = load_model(MODEL_NAME)
-    meta = load_meta(META_FILE)
-    meta_emb = load_meta_emb(meta, model)
+    # meta = load_meta(META_FILE)
+    # meta_emb = load_meta_emb(meta, model)
     console.print(Panel.fit("✨ Ask me any linux commands (type 'exit' to quit)", title=f"{SUIK_LOGO} Suika Ready"))
     while True:
         question = Prompt.ask(f"[#B7D46F]❯ Your question {SUIK_LOGO} ")
@@ -142,7 +148,8 @@ def main():
             console.print(f"{SUIK_LOGO} 👋 Goodbye!")
             break
         try:
-            match, score = ask(question, model, meta, meta_emb)
+            # match, score = ask(question, model, meta, meta_emb)
+            match, score = vector_db_ask(question, model)
             response_panel = format_response(match, score)
             console.print(response_panel)
         except Exception as e:

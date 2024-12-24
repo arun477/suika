@@ -4,6 +4,7 @@ import json
 
 DATABASE_NAME = "suika_commands.db"
 TABLE = "suika_commands"
+VEC_ID_MAPPING_TABLE = "id_to_vec_pos"
 
 
 def create_database():
@@ -59,12 +60,17 @@ def load_data(docs):
 
 
 def query_by_id(doc_id):
+    print("doc_id", doc_id)
     conn = sqlite3.connect(DATABASE_NAME)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM suika_commands WHERE linux_cmd_id = ?", (doc_id,))
     res = cursor.fetchone()
+    doc = dict(res)
     conn.close()
-    return res
+    doc["keywords"] = json.loads(doc["keywords"])
+    doc["examples"] = json.loads(doc["examples"])
+    return doc
 
 
 def fetch_all_documents():
@@ -84,3 +90,20 @@ def fetch_all_documents():
     finally:
         conn.close()
     return documents
+
+
+def fetch_vec_id_mapping():
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM {VEC_ID_MAPPING_TABLE}")
+        rows = cursor.fetchall()
+        documents = [dict(row) for row in rows]
+        mapping = {ele["faiss_index_id"]: ele["linux_cmd_id"] for ele in documents}
+    except sqlite3.OperationalError as e:
+        print(f"OperationalError: {e}")
+        mapping = {}
+    finally:
+        conn.close()
+    return mapping
