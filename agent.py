@@ -52,6 +52,7 @@ SUIK_LOGO = "🦦"
 META_FILE = "meta.json"
 console = Console()
 LABEL_COLORS = Style(color="#B7D46F", bold=True)
+LABEL_COLORS = Style(color="#808080", bold=True)
 
 
 def load_model(model_name):
@@ -89,39 +90,26 @@ def ask(question, model, meta, meta_emb):
 def format_response(match: dict, score: float) -> Panel:
     table = Table(show_header=False, box=None, padding=(0, 1), collapse_padding=True)
 
-    # add command name
     cmd_text = Text.assemble(("Command: ", LABEL_COLORS), (match.get("name", "N/A"), Style(color="white")))
     table.add_row(cmd_text)
 
-    # add description
     if description := match.get("description"):
         desc_text = Text.assemble(("Description: ", LABEL_COLORS), (description, Style(color="white")))
         table.add_row(desc_text)
 
-    # add examples
     if examples := match.get("examples"):
-        examples_group = []
-        for idx, example in enumerate(examples, start=1):
-            code = Syntax(
-                example,
-                "bash",
-                theme="monokai",
-                line_numbers=False,
-                word_wrap=True,
-                padding=(0, 2),
-            )
-            examples_group.append(Panel(code, title=f"Example {idx}", border_style="cyan"))
-
-        # combine all examples into a group for display
-        examples_panel = Group(*examples_group)
         table.add_row(Text("Examples:", style=LABEL_COLORS))
-        table.add_row(examples_panel)
-
-    # create a footer with model name and match score
+        for idx, example in enumerate(examples, start=1):
+            example_label = Text.assemble((f"  Example command: ", Style(dim=True)))
+            table.add_row(example_label)
+            code = Syntax(
+                "    " + example, "bash", theme="material", line_numbers=False, word_wrap=True, padding=(0, 1), background_color="default"
+            )
+            table.add_row(code)
     footer = Text.assemble(
         ("Model: ", LABEL_COLORS),
         (MODEL_NAME, Style(color="white", italic=True)),
-        (" | Match Score: ", Style(dim=True)),
+        (" | Match Score: ", LABEL_COLORS),
         (f"{score:.2f}", Style(color="white")),
     )
 
@@ -141,8 +129,7 @@ def main():
     meta_emb = load_meta_emb(meta, model)
     console.print(Panel.fit("✨ Ask me any linux commands (type 'exit' to quit)", title=f"{SUIK_LOGO} Suika Ready"))
     while True:
-        question = Prompt.ask(f"Your question {SUIK_LOGO} ")
-        # question = typer.prompt("Your question")
+        question = Prompt.ask(f"[#B7D46F]Your question {SUIK_LOGO} ")
         if question.lower() == "exit":
             console.print(f"{SUIK_LOGO} 👋 Goodbye!")
             break
